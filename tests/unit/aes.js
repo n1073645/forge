@@ -271,6 +271,214 @@ var UTIL = require('../../lib/util');
       }
     })();
 
+    // AES-128-PCBC
+    (function() {
+      var keys = [
+        '06a9214036b8a15b512e03d534120006',
+        'c286696d887c9aa0611bbb3e2025a45a',
+        '6c3ea0477630ce21a2ce334aa746c2cd',
+        '56e47a38c5598974bc46903dba290349'
+      ];
+
+      var ivs = [
+        '3dafba429d9eb430b422da802c9fac41',
+        '562e17996d093d28ddb3ba695a2e6f58',
+        'c782dc4c098c66cbd9cd27d825682c81',
+        '8ce82eefbea0da3c44699ed7db51b7d9'
+      ];
+
+      var inputs = [
+        'Single block msg',
+        '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f',
+        'This is a 48-byte message (exactly 3 AES blocks)',
+        'a0a1a2a3a4a5a6a7a8a9aaabacadaeaf' +
+          'b0b1b2b3b4b5b6b7b8b9babbbcbdbebf' +
+          'c0c1c2c3c4c5c6c7c8c9cacbcccdcecf' +
+          'd0d1d2d3d4d5d6d7d8d9dadbdcdddedf'
+      ];
+
+      var outputs = [
+        'e353779c1079aeb82708942dbe77181a',
+        'd296cd94c2cccf8a3a863028b5e1dc0a1f730e7fa0906e6206a5649c66e94588',
+        'd0a02b3836451753d493665d33f0e886' +
+          'eedd014b57b28a83ec0139797b16b712' +
+          '88e65d5964b0fb9801ccdfc274cd9508',
+        'c30e32ffedc0774e6aff6af0869f71aa' +
+          '90a2618e2c97e127acb60e32a0b39870' +
+          'd48c175591fa93c0fbf50e90f219ab83' +
+          '1d0fceedde62e88f7e3e0495cc8ebefb'
+      ];
+
+      for(var i = 0; i < keys.length; ++i) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys[i]);
+          var iv = UTIL.hexToBytes(ivs[i]);
+          var input = (i & 1) ? UTIL.hexToBytes(inputs[i]) : inputs[i];
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-128-pcbc encrypt: ' + inputs[i], function() {
+            // encrypt w/no padding
+            var cipher = CIPHER.createCipher('AES-PCBC', key);
+            cipher.mode.pad = false;
+            cipher.start({iv: iv});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-128-pcbc decrypt: ' + outputs[i], function() {
+            // decrypt w/no padding
+            var cipher = CIPHER.createDecipher('AES-PCBC', key);
+            cipher.mode.unpad = false;
+            cipher.start({iv: iv});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            var out = (i & 1) ? cipher.output.toHex() : cipher.output.bytes();
+            ASSERT.equal(out, inputs[i]);
+          });
+        })(i);
+      }
+    })();
+
+    // AES-192-PCBC
+    (function() {
+      var keys = [
+        '8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b',
+        '8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b',
+        '8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b',
+        '8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b'
+      ];
+
+      var ivs = [
+        '000102030405060708090A0B0C0D0E0F',
+        '4F021DB243BC633D7178183A9FA071E8',
+        'B4D9ADA9AD7DEDF4E5E738763F69145A',
+        '571B242012FB7AE07FA9BAAC3DF102E0'
+      ];
+
+      var inputs = [
+        'Single block msg',
+        '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f',
+        'This is a 48-byte message (exactly 3 AES blocks)',
+        'a0a1a2a3a4a5a6a7a8a9aaabacadaeaf' +
+          'b0b1b2b3b4b5b6b7b8b9babbbcbdbebf' +
+          'c0c1c2c3c4c5c6c7c8c9cacbcccdcecf' +
+          'd0d1d2d3d4d5d6d7d8d9dadbdcdddedf'
+      ];
+
+      var outputs = [
+        '55c590d40fc94824567ed5d373fcf83d',
+        '80d40e64bd09da15f62c5d2dca6b21e3' +
+          '730f2b93447e02bb04781b1c31f48c9a',
+        '73a15b1459edecf07900f1b2328aee3a5f' +
+          'b6193ec03f91981108098b6b3e9f9e5a98' +
+          'c3d03ba2c8f531114b031c1db3ac',
+        '4e61590d9c2c614a4d9aec109c476ef2' +
+          'cf0676ed30fd71b701233e7414f83e41' +
+          '2779727c165f4d07c6a688af0a44ba25' +
+          'bb001914b0c67106ac5075b57f07574f'
+      ];
+
+      for(var i = 0; i < keys.length; ++i) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys[i]);
+          var iv = UTIL.hexToBytes(ivs[i]);
+          var input = (i & 1) ? UTIL.hexToBytes(inputs[i]) : inputs[i];
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-192-pcbc encrypt: ' + inputs[i], function() {
+            // encrypt w/no padding
+            var cipher = CIPHER.createCipher('AES-PCBC', key);
+            cipher.mode.pad = false;
+            cipher.start({iv: iv});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-192-pcbc decrypt: ' + outputs[i], function() {
+            // decrypt w/no padding
+            var cipher = CIPHER.createDecipher('AES-PCBC', key);
+            cipher.mode.unpad = false;
+            cipher.start({iv: iv});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            var out = (i & 1) ? cipher.output.toHex() : cipher.output.bytes();
+            ASSERT.equal(out, inputs[i]);
+          });
+        })(i);
+      }
+    })();
+
+    // AES-256-PCBC
+    (function() {
+      var keys = [
+        '603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4',
+        '603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4',
+        '603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4',
+        '603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4'
+      ];
+
+      var ivs = [
+        '000102030405060708090A0B0C0D0E0F',
+        'F58C4C04D6E5F1BA779EABFB5F7BFBD6',
+        '9CFC4E967EDB808D679F777BC6702C7D',
+        '39F23369A9D9BACFA530E26304231461'
+      ];
+
+      var inputs = [
+        'Single block msg',
+        '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f',
+        'This is a 48-byte message (exactly 3 AES blocks)',
+        'a0a1a2a3a4a5a6a7a8a9aaabacadaeaf' +
+          'b0b1b2b3b4b5b6b7b8b9babbbcbdbebf' +
+          'c0c1c2c3c4c5c6c7c8c9cacbcccdcecf' +
+          'd0d1d2d3d4d5d6d7d8d9dadbdcdddedf'
+      ];
+
+      var outputs = [
+        '8d50f5f681cdb2a325ff579bb599496d',
+        'ce054cfa6ec264de70202e906bd57065343a2f1a09c0507c4479a04520e5a44d',
+        '173932058b1dc1cd3f04959a702df824' +
+          '77d6ecd7b58853395071974409c7095d' +
+          '371bd45ab99c9041d4d939c2e0e718e2',
+        '78af8612887f0a7a186de8fe9744b173' +
+          'ab4b1ded63cdb770abeb13cade8dd62b' +
+          'd39a38582ed366e36a8e8492d1a45bc7' +
+          '8ed78858fcf11c0447e351f1b60486e3'
+      ];
+
+      for(var i = 0; i < keys.length; ++i) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys[i]);
+          var iv = UTIL.hexToBytes(ivs[i]);
+          var input = (i & 1) ? UTIL.hexToBytes(inputs[i]) : inputs[i];
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-256-pcbc encrypt: ' + inputs[i], function() {
+            // encrypt w/no padding
+            var cipher = CIPHER.createCipher('AES-PCBC', key);
+            cipher.mode.pad = false;
+            cipher.start({iv: iv});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-256-pcbc decrypt: ' + outputs[i], function() {
+            // decrypt w/no padding
+            var cipher = CIPHER.createDecipher('AES-PCBC', key);
+            cipher.mode.unpad = false;
+            cipher.start({iv: iv});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            var out = (i & 1) ? cipher.output.toHex() : cipher.output.bytes();
+            ASSERT.equal(out, inputs[i]);
+          });
+        })(i);
+      }
+    })();
+
     // AES-128-CBC
     (function() {
       var keys = [
