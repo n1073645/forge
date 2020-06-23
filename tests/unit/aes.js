@@ -271,6 +271,160 @@ var UTIL = require('../../lib/util');
       }
     })();
 
+    // AES-128-ECB-Padding
+    (function() {
+      var paddings = [
+        'W3C',
+        'Default Padding',
+        'PKCS#7',
+        'ISO',
+        'Zero Padding',
+        'Space Padding'
+      ];
+
+      var keys = '2b7e151628aed2a6abf7158809cf4f3c';
+
+      var inputs = 'A test message';
+
+      var outputs = [
+        'aece38b9ea42dd4b43e8e3787d9ab3ad',
+        'aece38b9ea42dd4b43e8e3787d9ab3ad',
+        'aece38b9ea42dd4b43e8e3787d9ab3ad',
+        '66aa7074d8a392ec473ccd18e9805ef6',
+        'd89db3cf08aede3a243581d4c8fe4a67',
+        '7026f6f9a325daa077451499e22dacb7'
+      ];
+
+      for(var i = 0; i < paddings.length; ++i) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys);
+          var input = inputs;
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-128-ecb-' + paddings[i] + ' encrypt: ' +
+            input, function() {
+            var cipher = CIPHER.createCipher('AES-ECB', key);
+            cipher.start({padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-128-ecb-' + paddings[i] + ' decrypt: ' +
+            outputs[i], function() {
+            var cipher = CIPHER.createDecipher('AES-ECB', key);
+            cipher.start({padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            ASSERT.equal(cipher.output.bytes(), inputs);
+          });
+        })(i);
+      }
+    })();
+
+    // AES-192-ECB-Padding
+    (function() {
+      var paddings = [
+        'W3C',
+        'Default Padding',
+        'PKCS#7',
+        'ISO',
+        'Zero Padding',
+        'Space Padding'
+      ];
+
+      var keys = '8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b';
+
+      var inputs = 'A test message';
+
+      var outputs = [
+        '91c0f1b4bcca60218a5fc220a941714a',
+        '91c0f1b4bcca60218a5fc220a941714a',
+        '91c0f1b4bcca60218a5fc220a941714a',
+        'd655a750e212177f6036ae2ae9c4ddce',
+        '8708a07ffd05309d7372b616beab684d',
+        '59bb1893c933fce983861d0a7a207ea3'
+      ];
+
+      for(var i = 0; i < paddings.length; ++i) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys);
+          var input = inputs;
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-192-ecb-' + paddings[i] + ' encrypt: ' +
+            input, function() {
+            var cipher = CIPHER.createCipher('AES-ECB', key);
+            cipher.start({padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-192-ecb-' + paddings[i] + ' decrypt: ' +
+            outputs[i], function() {
+            var cipher = CIPHER.createDecipher('AES-ECB', key);
+            cipher.start({padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            ASSERT.equal(cipher.output.bytes(), inputs);
+          });
+        })(i);
+      }
+    })();
+
+    // AES-256-ECB-Padding
+    (function() {
+      var paddings = [
+        'W3C',
+        'Default Padding',
+        'PKCS#7',
+        'ISO',
+        'Zero Padding',
+        'Space Padding'
+      ];
+
+      var keys =
+        '603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4';
+
+      var inputs = 'A test message';
+
+      var outputs = [
+        '78c8a9dd2fdc3e8fa9f2aac8447deb64',
+        '78c8a9dd2fdc3e8fa9f2aac8447deb64',
+        '78c8a9dd2fdc3e8fa9f2aac8447deb64',
+        'a91995e8fac56d7a58a4ab335e45f7fb',
+        '4c38f37e946dfd8b6bfbd6c02766cc7c',
+        '3869beefca64cad8f433b27e4a868738'
+      ];
+
+      for(var i = 0; i < paddings.length; ++i) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys);
+          var input = inputs;
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-256-ecb-' + paddings[i] + ' encrypt: ' +
+            input, function() {
+            var cipher = CIPHER.createCipher('AES-ECB', key);
+            cipher.start({padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-256-ecb-' + paddings[i] + ' decrypt: ' +
+            outputs[i], function() {
+            var cipher = CIPHER.createDecipher('AES-ECB', key);
+            cipher.start({padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            ASSERT.equal(cipher.output.bytes(), inputs);
+          });
+        })(i);
+      }
+    })();
+
     // AES-128-CBC
     (function() {
       var keys = [
@@ -457,6 +611,172 @@ var UTIL = require('../../lib/util');
             cipher.finish();
             var out = cipher.output.toHex();
             ASSERT.equal(out, inputs[i]);
+          });
+        })(i);
+      }
+    })();
+
+    // AES-128-CBC-Padding
+    (function() {
+      var paddings = [
+        'W3C',
+        'Default Padding',
+        'PKCS#7',
+        'ISO',
+        'Zero Padding',
+        'Space Padding'
+      ];
+
+      var keys = '06a9214036b8a15b512e03d534120006';
+
+      var ivs = '3dafba429d9eb430b422da802c9fac41';
+
+      var inputs = 'A test message';
+
+      var outputs = [
+        'ac0b945266f81aebf2359686c684c5e5',
+        'ac0b945266f81aebf2359686c684c5e5',
+        'ac0b945266f81aebf2359686c684c5e5',
+        'a17bd80b69275d4792b01e5880d30709',
+        'dd600eb66b9e5f85f11423c613519c08',
+        'fcb438f2f601eca1554ce7b6eb40b828'
+      ];
+
+      for(var i = 0; i < paddings.length; i++) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys);
+          var iv = UTIL.hexToBytes(ivs);
+          var input = inputs;
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-128-cbc-' + paddings[i] + ' encrypt: ' +
+            inputs, function() {
+            var cipher = CIPHER.createCipher('AES-CBC', key);
+            cipher.start({iv: iv, padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-128-cbc-' + paddings[i] + ' decrypt: ' +
+            outputs[i], function() {
+            var cipher = CIPHER.createDecipher('AES-CBC', key);
+            cipher.start({iv: iv, padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            var out = cipher.output.bytes();
+            ASSERT.equal(out, inputs);
+          });
+        })(i);
+      }
+    })();
+
+    // AES-192-CBC-Padding
+    (function() {
+      var paddings = [
+        'W3C',
+        'Default Padding',
+        'PKCS#7',
+        'ISO',
+        'Zero Padding',
+        'Space Padding'
+      ];
+
+      var keys = '8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b';
+
+      var ivs = '3dafba429d9eb430b422da802c9fac41';
+
+      var inputs = 'A test message';
+
+      var outputs = [
+        'e731931e93f9dd5e0d9e6c267e952273',
+        'e731931e93f9dd5e0d9e6c267e952273',
+        'e731931e93f9dd5e0d9e6c267e952273',
+        '40f9c82053243695725028b23519b807',
+        'c594ae402e38c7914672cae18f5c6c2e',
+        'b94abb15dd7ddfac5e7c00417e9e4251'
+      ];
+
+      for(var i = 0; i < paddings.length; i++) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys);
+          var iv = UTIL.hexToBytes(ivs);
+          var input = inputs;
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-192-cbc-' + paddings[i] + ' encrypt: ' +
+            inputs, function() {
+            var cipher = CIPHER.createCipher('AES-CBC', key);
+            cipher.start({iv: iv, padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-192-cbc-' + paddings[i] + ' decrypt: ' +
+            outputs[i], function() {
+            var cipher = CIPHER.createDecipher('AES-CBC', key);
+            cipher.start({iv: iv, padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            var out = cipher.output.bytes();
+            ASSERT.equal(out, inputs);
+          });
+        })(i);
+      }
+    })();
+
+    // AES-256-CBC-Padding
+    (function() {
+      var paddings = [
+        'W3C',
+        'Default Padding',
+        'PKCS#7',
+        'ISO',
+        'Zero Padding',
+        'Space Padding'
+      ];
+
+      var keys =
+        '603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4';
+
+      var ivs = '3dafba429d9eb430b422da802c9fac41';
+
+      var inputs = 'A test message';
+
+      var outputs = [
+        'bc40719ac508508a30bf86f0d2d08647',
+        'bc40719ac508508a30bf86f0d2d08647',
+        'bc40719ac508508a30bf86f0d2d08647',
+        '853a2acca15144326c1a5451f8a0072d',
+        'f70a4945b5be9ef32f9d6d8451de2542',
+        '28bbc411e86ea021a6a2543e5ac09f1d'
+      ];
+
+      for(var i = 0; i < paddings.length; i++) {
+        (function(i) {
+          var key = UTIL.hexToBytes(keys);
+          var iv = UTIL.hexToBytes(ivs);
+          var input = inputs;
+          var output = UTIL.hexToBytes(outputs[i]);
+
+          it('should aes-256-cbc-' + paddings[i] + ' encrypt: ' +
+            inputs, function() {
+            var cipher = CIPHER.createCipher('AES-CBC', key);
+            cipher.start({iv: iv, padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(input));
+            cipher.finish();
+            ASSERT.equal(cipher.output.toHex(), outputs[i]);
+          });
+
+          it('should aes-256-cbc-' + paddings[i] + ' decrypt: ' +
+            outputs[i], function() {
+            var cipher = CIPHER.createDecipher('AES-CBC', key);
+            cipher.start({iv: iv, padding: paddings[i]});
+            cipher.update(UTIL.createBuffer(output));
+            cipher.finish();
+            var out = cipher.output.bytes();
+            ASSERT.equal(out, inputs);
           });
         })(i);
       }
